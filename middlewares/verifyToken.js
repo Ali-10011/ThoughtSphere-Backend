@@ -14,9 +14,9 @@ const verifyToken = async (req, res, next) => {
         if (err) {
           return res.status(401).json({ msg: err.message });
         } else {
-          authModel.findOne({ username: decoded.username }).then((result) => {
+          authModel.findOne({ email: decoded.email }).then((result) => {
             if (result) {
-              req.username = result.username;
+              req.email = result.email;
               next();
             } else {
               return res.status(404).json({ msg: "Could not Find User" });
