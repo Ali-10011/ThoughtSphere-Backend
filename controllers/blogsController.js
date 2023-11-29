@@ -1,7 +1,7 @@
 const url = require("url");
 const blogsModel = require("../models/blogsModel");
 const notificationsModel = require("../models/notificationsModel");
-
+const bookmarksModel = require("../models/bookmarksModel");
 const getRecentBlogs = async (req, res) => {
   try {
     const blogs = await blogsModel.find().limit(10).sort({ createdAt: -1 });
@@ -163,6 +163,70 @@ const addNotification = async (req) => {
   }
 };
 
+//adding a bookmark to a Blog
+const addBookmark = async (req, res) => {
+  try {
+    const bookmark = await bookmarksModel.findOne(
+      { email: req.body.email }     
+    );
+      let updatedBookmark;
+      let message;
+
+   if(bookmark)
+   {
+    let user_bookmarks = bookmark.bookmarks
+   
+    if(bookmark.bookmarks.includes(req.body.bookmark))
+    {
+      user_bookmarks.pop(req.body.bookmark)
+      message = "blog removed"
+    }
+    else 
+    {
+      user_bookmarks.push(req.body.bookmark)
+      message = "blog added"
+    }
+    bookmark.bookmarks = user_bookmarks
+    updatedBookmark = await bookmarksModel.findOneAndUpdate(
+      { email: req.body.email },
+      bookmark
+    );
+   }
+   else 
+   {
+    updatedBookmark = await bookmarksModel.create(
+      {
+        email: req.body.email,
+        bookmarks: [req.body.bookmark]
+      }
+    
+    );
+    message = "blog added"
+   }
+    if (!updatedBookmark) {
+      res.status(200).json({code: "0", msg: "Cannot Complete Request" });
+    } else {
+     
+      res.status(200).json({code: "1", msg: message});
+    }
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ code: "0", msg: "Internal server error" });
+  }
+};
+
+const getBookmarks = async (req, res) => {
+  try {
+    const bookmarks = await bookmarksModel
+      .find({ email: req.email })
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({code : "1", msg: "Fetch Successful", bookmarks});
+  } catch (e) {
+    res.status(500).json({ msg: "Internal server error" });
+  }
+  
+};
 module.exports = {
   getRecentBlogs,
   getBlogs,
@@ -170,5 +234,7 @@ module.exports = {
   deleteBlog,
   getSingleBlog,
   updateBlog,
-  addComment
+  addComment,
+  addBookmark,
+  getBookmarks
 };

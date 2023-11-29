@@ -1,5 +1,5 @@
 const express = require("express");
-const { getRecentBlogs,getBlogs, uploadBlog, deleteBlog, getSingleBlog, updateBlog, addComment } = require("../controllers/blogsController");
+const { getRecentBlogs,getBlogs, uploadBlog, deleteBlog, getSingleBlog, updateBlog, addComment, addBookmark , getBookmarks} = require("../controllers/blogsController");
 const  verifyToken  = require("../middlewares/verifyToken");
 
 const router = express.Router();
@@ -24,6 +24,12 @@ router.delete("/home/blogs/:id", verifyToken, deleteBlog)
 
 //update a single blog
 router.patch("/home/blogs/:id",verifyToken, updateBlog)
+
+//POST Bookmark
+router.post("/home/blogs/add-bookmark",verifyToken, addBookmark);
+
+//GET Bookmarks
+router.post("/home/blogs/bookmarks",verifyToken, getBookmarks);
 
 
 //Exporting Modules
