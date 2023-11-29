@@ -1,5 +1,6 @@
 const url = require("url");
 const blogsModel = require("../models/blogsModel");
+const notificationsModel = require("../models/notificationsModel");
 
 const getRecentBlogs = async (req, res) => {
   try {
@@ -27,7 +28,6 @@ const getBlogs = async (req, res) => {
 //posting a single blog
 const uploadBlog = async (req, res) => {
   try {
-    console.log(req.body);
     const blog = await new blogsModel({
       email: req.body.email,
       title: req.body.title,
@@ -38,7 +38,16 @@ const uploadBlog = async (req, res) => {
     if (!blog) {
       res.status(200).json({code: "0", msg: "Cannot Complete Request" });
     } else {
-      res.status(200).json({code: "1", msg: "Blog Successfully Added", blog});
+      notif = addNotification({email: blog.email, body: "You have added a blog - " + blog.title, blog_id: blog._id})
+      if(notif)
+      {
+        res.status(200).json({code: "1", msg: "Blog Added"});
+      }
+      else 
+      {
+        res.status(200).json({code: "0", msg: "Cannot Complete Request"});
+      }
+      
     }
   } catch (e) {
     console.log(e);
@@ -91,10 +100,66 @@ const updateBlog = async (req, res) => {
     if (!blog) {
       res.status(200).json({ code: "0", msg: "Cannot Update" });
     } else {
-      res.status(200).json({code: "1", msg: "Successfully Updated" });
+      notif = addNotification({email: blog.email, body: "You have updated a blog - " + blog.title, blog_id: req.params.id})
+      if(notif)
+      {
+        res.status(200).json({code: "1", msg: "Blog Updated"});
+      }
+      else 
+      {
+        res.status(200).json({code: "0", msg: "Cannot Complete Request"});
+      }
     }
   } catch (e) {
     res.status(500).json({code: "0", msg: "Internal server error" });
+  }
+};
+//adding a comment to a Blog
+const addComment = async (req, res) => {
+  try {
+    const blog = await blogsModel.findById(
+      { _id: req.body.id }     
+    );
+    let comments = blog.comments
+    comments.push({"comment": req.body.comment, "email": req.body.email})
+    blog.comments = comments
+    const updatedBlog = await blogsModel.findByIdAndUpdate(
+      { _id: req.body.id },
+      blog
+    );
+    if (!updatedBlog) {
+      res.status(200).json({code: "0", msg: "Cannot Complete Request" });
+    } else {
+      notif = addNotification({email: updatedBlog.email, body: "A Comment has been added on your blog - " + updatedBlog.title, blog_id: req.body.id })
+      if(notif)
+      {
+        res.status(200).json({code: "1", msg: "Comment Added"});
+      }
+      else 
+      {
+        res.status(200).json({code: "0", msg: "Cannot Complete Request"});
+      }
+     
+    }
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ code: "0", msg: "Internal server error" });
+  }
+};
+
+const addNotification = async (req) => {
+  try {
+   
+    const notification = await notificationsModel.create(
+     {
+      email: req.email,
+      blog_id: req.blog_id,
+      body: req.body
+     }
+    );
+    return notification
+  } catch (e) {
+    return null
   }
 };
 
@@ -105,4 +170,5 @@ module.exports = {
   deleteBlog,
   getSingleBlog,
   updateBlog,
+  addComment
 };

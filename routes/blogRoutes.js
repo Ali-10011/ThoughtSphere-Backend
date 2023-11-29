@@ -1,5 +1,5 @@
 const express = require("express");
-const { getRecentBlogs,getBlogs, uploadBlog, deleteBlog, getSingleBlog, updateBlog } = require("../controllers/blogsController");
+const { getRecentBlogs,getBlogs, uploadBlog, deleteBlog, getSingleBlog, updateBlog, addComment } = require("../controllers/blogsController");
 const  verifyToken  = require("../middlewares/verifyToken");
 
 const router = express.Router();
@@ -12,6 +12,9 @@ router.get("/home/blogs/:id",verifyToken, getSingleBlog);
 
 //GET blogs
 router.get("/home/my-blogs",verifyToken, getBlogs);
+
+//POST Comment
+router.post("/home/blogs/add-comment",verifyToken, addComment);
 
 //POST a single blog
 router.post("/home/new-blog", verifyToken, uploadBlog);
