@@ -18,10 +18,7 @@ const profileSchema = new Schema(
     },
     followers: {
       type: [String],
-    },
-    blogs_count: {
-     type: String
-    },
+    }
   },
   { timestamps: true }
 );

@@ -37,7 +37,6 @@ const registerUser = async (req, res) => {
       {
         email: email,
         username: username,
-        blogs_count: "0",
         followers: [],
         followings: []
       }

@@ -51,16 +51,18 @@ const followProfile = async (req, res) => {
       followers.push(req.email)
       msg = "User Followed"
     }
+
     user_following.followings = followings
     user_follower.followers = followers
+
     await profileModel.findOneAndUpdate({ email: req.email }, user_following); //user who is following
     await profileModel.findOneAndUpdate({ email: req.body.user_follow }, user_follower); //user who is being follow/unfollow
 
-      return res.status(200).json({ msg: msg });
+    return res.status(200).json({code: "1", msg: msg });
     
   } catch (e) {
    
-    return res.status(500).json({ msg: "Internal server error" });
+    return res.status(500).json({ code: "0", msg: "Internal server error" });
   }
 };
 module.exports = { updateProfile, getProfile, followProfile };
