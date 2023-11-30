@@ -32,7 +32,7 @@ router.post("/home/blogs/add-bookmark",verifyToken, addBookmark);
 router.post("/home/blogs/bookmarks",verifyToken, getBookmarks);
 
 //POST LIKE
-router.post("/home/blogs/add-like",verifyToken, addBlogLike);
+router.post("/home/blogs/like",verifyToken, addBlogLike);
 
 
 
