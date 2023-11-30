@@ -3,6 +3,11 @@ const Schema = mongoose.Schema; //creating a schema for the database (schema for
 
 const profileSchema = new Schema(
   {
+    username: 
+    {
+      type: String,
+      required: true,
+    },
     email: {
       type: String,
       required: true,

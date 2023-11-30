@@ -5,10 +5,10 @@ const  verifyToken  = require("../middlewares/verifyToken");
 const router = express.Router();
 
 //update Profile
-router.post("/home/profile", verifyToken, updateProfile);
+router.patch("/home/update-profile", verifyToken, updateProfile);
 
 //get profile
-router.post("/home/user/profile", verifyToken, getProfile);
+router.get("/home/profile", verifyToken, getProfile);
 
 //follow profile
 router.post("/home/profile/follow",verifyToken, followProfile)

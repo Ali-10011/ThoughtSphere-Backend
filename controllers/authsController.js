@@ -36,6 +36,7 @@ const registerUser = async (req, res) => {
     const newProfile = await profileModel.create(
       {
         email: email,
+        username: username,
         blogs_count: "0",
         followers: [],
         followings: []
