@@ -1,5 +1,5 @@
 const express = require("express");
-const { getRecentBlogs,getBlogs, uploadBlog, deleteBlog, getSingleBlog, updateBlog, addComment, addBookmark , getBookmarks} = require("../controllers/blogsController");
+const { getRecentBlogs,getBlogs, uploadBlog, deleteBlog, getSingleBlog, updateBlog, addComment, addBookmark , getBookmarks, addBlogLike} = require("../controllers/blogsController");
 const  verifyToken  = require("../middlewares/verifyToken");
 
 const router = express.Router();
@@ -30,6 +30,10 @@ router.post("/home/blogs/add-bookmark",verifyToken, addBookmark);
 
 //GET Bookmarks
 router.post("/home/blogs/bookmarks",verifyToken, getBookmarks);
+
+//POST LIKE
+router.post("/home/blogs/add-like",verifyToken, addBlogLike);
+
 
 
 //Exporting Modules

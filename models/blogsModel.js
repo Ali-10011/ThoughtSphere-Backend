@@ -20,6 +20,10 @@ const blogsSchema = new Schema(
     },
     comments:{
       type: [commentSchema]
+    },
+    likes: 
+    {
+      type: [String]
     }
   },
   { timestamps: true }

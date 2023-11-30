@@ -2,6 +2,7 @@ const url = require("url");
 const blogsModel = require("../models/blogsModel");
 const notificationsModel = require("../models/notificationsModel");
 const bookmarksModel = require("../models/bookmarksModel");
+
 const getRecentBlogs = async (req, res) => {
   try {
     const blogs = await blogsModel.find().limit(10).sort({ createdAt: -1 });
@@ -32,7 +33,8 @@ const uploadBlog = async (req, res) => {
       email: req.body.email,
       title: req.body.title,
       body: req.body.body,
-      comments: []
+      comments: [],
+      likes: []
     }).save();
 
     if (!blog) {
@@ -50,7 +52,7 @@ const uploadBlog = async (req, res) => {
       
     }
   } catch (e) {
-    console.log(e);
+     
     res.status(500).json({ code: "0", msg: "Internal server error" });
   }
 };
@@ -142,7 +144,7 @@ const addComment = async (req, res) => {
      
     }
   } catch (e) {
-    console.log(e);
+     
     res.status(500).json({ code: "0", msg: "Internal server error" });
   }
 };
@@ -210,7 +212,7 @@ const addBookmark = async (req, res) => {
       res.status(200).json({code: "1", msg: message});
     }
   } catch (e) {
-    console.log(e);
+     
     res.status(500).json({ code: "0", msg: "Internal server error" });
   }
 };
@@ -227,6 +229,45 @@ const getBookmarks = async (req, res) => {
   }
   
 };
+
+//adding/Remove a like to a Blog
+const addBlogLike = async (req, res) => {
+  try {
+
+    const blog = await blogsModel.findById(
+      { _id: req.body.id }     
+    );
+    let msg;
+    let likes = blog.likes
+    if(likes.includes(req.body.user_like))
+    {
+      likes.pop(req.body.user_like)
+      msg = "Like Removed"
+    }
+    else 
+    {
+      likes.push(req.body.user_like)
+      msg = "Like Added"
+    }
+   
+   blog.likes = likes
+
+    
+    const updatedBlog = await blogsModel.findByIdAndUpdate(
+      { _id: req.body.id },
+      blog
+    );
+    if (!updatedBlog) {
+      res.status(200).json({code: "0", msg: msg });
+    } else {
+      res.status(200).json({code: "1", msg: msg});   
+    }
+  } catch (e) {
+     
+    res.status(500).json({ code: "0", msg: "Internal server error" });
+  }
+};
+
 module.exports = {
   getRecentBlogs,
   getBlogs,
@@ -236,5 +277,6 @@ module.exports = {
   updateBlog,
   addComment,
   addBookmark,
-  getBookmarks
+  getBookmarks,
+  addBlogLike
 };
