@@ -7,7 +7,7 @@ require("dotenv").config();
 const registerUser = async (req, res) => {
   try {
     // Get user input
-    const { username, password, email } = req.body;
+    const { username, password, email , social} = req.body;
 
     //Validate user input
     if (!(username && password && email)) {
@@ -38,7 +38,8 @@ const registerUser = async (req, res) => {
         email: email,
         username: username,
         followers: [],
-        followings: []
+        followings: [],
+        social: social
       }
     );
 

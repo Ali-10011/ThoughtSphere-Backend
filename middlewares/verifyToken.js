@@ -12,21 +12,21 @@ const verifyToken = async (req, res, next) => {
 
       jwt.verify(token, process.env.TOKEN_SECRET, function (err, decoded) {
         if (err) {
-          return res.status(401).json({ msg: err.message });
+          return res.status(401).json({ code: "0", msg: err.message });
         } else {
           authModel.findOne({ email: decoded.email }).then((result) => {
             if (result) {
               req.email = result.email;
               next();
             } else {
-              return res.status(404).json({ msg: "Could not Find User" });
+              return res.status(404).json({code:"0", msg: "Could not Find User" });
             }
           });
         }
       });
     }
   } catch (error) {
-    return res.status(404).json({ msg: error });
+    return res.status(404).json({code:"0", msg: error });
   }
 };
 module.exports = verifyToken;

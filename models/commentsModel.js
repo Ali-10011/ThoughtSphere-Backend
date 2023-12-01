@@ -9,6 +9,9 @@ const commentSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+},
+{
+    timestamp: true
 });
 
 module.exports = commentSchema;

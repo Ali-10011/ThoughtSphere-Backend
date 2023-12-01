@@ -225,6 +225,20 @@ const getBookmarks = async (req, res) => {
 
     res.status(200).json({code : "1", msg: "Fetch Successful", bookmarks});
   } catch (e) {
+    console.log(e)
+    res.status(500).json({ msg: "Internal server error" });
+  }
+  
+};
+const getNotifications = async (req, res) => {
+  try {
+    const bookmarks = await notificationsModel
+      .find({ email: req.email })
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({code : "1", msg: "Fetch Successful", bookmarks});
+  } catch (e) {
+    console.log(e)
     res.status(500).json({ msg: "Internal server error" });
   }
   
@@ -278,5 +292,6 @@ module.exports = {
   addComment,
   addBookmark,
   getBookmarks,
-  addBlogLike
+  addBlogLike,
+  getNotifications
 };

@@ -18,6 +18,10 @@ const profileSchema = new Schema(
     },
     followers: {
       type: [String],
+    },
+    social: 
+    {
+      type: [],
     }
   },
   { timestamps: true }
