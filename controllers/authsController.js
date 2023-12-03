@@ -87,8 +87,10 @@ const authenticateUser = async (req, res) => {
         }
       );
 
+      const profile = await profileModel.findOne({ email: email });
+
       // user
-      return res.status(200).json({code: "1", token: token, msg: "Success" });
+      return res.status(200).json({code: "1", token: token, msg: "Success", profile: profile});
     }
     res.status(200).send({ code: "0", msg: "Invalid Password" });
   } catch (err) {
