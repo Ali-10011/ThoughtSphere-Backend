@@ -42,14 +42,17 @@ const followProfile = async (req, res) => {
     
     if(followings.includes(req.body.user_follow) && followers.includes(req.email))
     {
+     
         followings.pop(req.body.user_follow)
         followers.pop(req.email)
         msg = "User Unfollowed"
+        console.log(msg)
     }
    else {
       followings.push(req.body.user_follow)
       followers.push(req.email)
       msg = "User Followed"
+      console.log(msg)
     }
 
     user_following.followings = followings

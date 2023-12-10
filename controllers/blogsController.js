@@ -4,12 +4,16 @@ const notificationsModel = require("../models/notificationsModel");
 const bookmarksModel = require("../models/bookmarksModel");
 
 const getRecentBlogs = async (req, res) => {
+
   try {
+   
     const blogs = await blogsModel.find().limit(10).sort({ createdAt: -1 });
 
     res.status(200).json({code : "1", msg: "Fetch Successful", blogs});
+   
   } catch (e) {
     res.status(500).json({code : "0", msg: "Internal server error" });
+  
   }
 };
 
@@ -118,12 +122,13 @@ const updateBlog = async (req, res) => {
 };
 //adding a comment to a Blog
 const addComment = async (req, res) => {
+  console.log("Comment was added");
   try {
     const blog = await blogsModel.findById(
       { _id: req.body.id }     
     );
     let comments = blog.comments
-    comments.push({"comment": req.body.comment, "email": req.body.email})
+    comments.push({"comment": req.body.comment, "email": req.email})
     blog.comments = comments
     const updatedBlog = await blogsModel.findByIdAndUpdate(
       { _id: req.body.id },
@@ -225,18 +230,19 @@ const getBookmarks = async (req, res) => {
 
     res.status(200).json({code : "1", msg: "Fetch Successful", bookmarks});
   } catch (e) {
-    console.log(e)
+   
     res.status(500).json({ msg: "Internal server error" });
   }
   
 };
 const getNotifications = async (req, res) => {
   try {
-    const bookmarks = await notificationsModel
+   
+    const notifications = await notificationsModel
       .find({ email: req.email })
       .sort({ createdAt: -1 });
-
-    res.status(200).json({code : "1", msg: "Fetch Successful", bookmarks});
+    console.log(notifications)
+    res.status(200).json({code : "1", msg: "Fetch Successful", notifications});
   } catch (e) {
     console.log(e)
     res.status(500).json({ msg: "Internal server error" });
