@@ -224,11 +224,23 @@ const addBookmark = async (req, res) => {
 
 const getBookmarks = async (req, res) => {
   try {
-    const bookmarks = await bookmarksModel
+    const response = await bookmarksModel
       .find({ email: req.email })
       .sort({ createdAt: -1 });
+   
+    
+    const bookmarks = response[0].bookmarks
+   console.log(bookmarks)
+     
+     const blogs = await Promise.all(bookmarks.map(async (bookmark) => {
+      const blog = await blogsModel.findOne({
+        _id: bookmark,
+      });
+      return blog;
+    }));
 
-    res.status(200).json({code : "1", msg: "Fetch Successful", bookmarks});
+
+    res.status(200).json({code : "1", msg: "Fetch Successful", blogs});
   } catch (e) {
    
     res.status(500).json({ msg: "Internal server error" });
