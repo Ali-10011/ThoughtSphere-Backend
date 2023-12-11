@@ -31,6 +31,16 @@ const getProfile = async (req, res) => {
   }
 };
 
+const getUserProfile = async (req, res) => {
+  try {
+    const profile = await profileModel.findOne({ email: req.body.email });
+
+    return res.status(200).json({code: "1", profile});
+  } catch (e) {
+    return res.status(500).json({ code: "0",msg: "Internal server error" });
+  }
+};
+
 const followProfile = async (req, res) => {
   try {
     const user_following = await profileModel.findOne({ email: req.email }); //user who is following
@@ -68,4 +78,4 @@ const followProfile = async (req, res) => {
     return res.status(500).json({ code: "0", msg: "Internal server error" });
   }
 };
-module.exports = { updateProfile, getProfile, followProfile };
+module.exports = { updateProfile, getProfile, followProfile , getUserProfile};
