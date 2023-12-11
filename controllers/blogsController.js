@@ -128,7 +128,7 @@ const addComment = async (req, res) => {
       { _id: req.body.id }     
     );
     let comments = blog.comments
-    comments.push({"comment": req.body.comment, "email": req.email})
+    comments.unshift({"comment": req.body.comment, "email": req.email})
     blog.comments = comments
     const updatedBlog = await blogsModel.findByIdAndUpdate(
       { _id: req.body.id },
@@ -227,22 +227,23 @@ const getBookmarks = async (req, res) => {
     const response = await bookmarksModel
       .find({ email: req.email })
       .sort({ createdAt: -1 });
-   
+    console.log(response)
     
     const bookmarks = response[0].bookmarks
-   console.log(bookmarks)
+   //console.log(bookmarks)
      
      const blogs = await Promise.all(bookmarks.map(async (bookmark) => {
       const blog = await blogsModel.findOne({
         _id: bookmark,
       });
-      return blog;
+      if(blog!=null)
+      {
+        return blog;
+      }
     }));
-
-
-    res.status(200).json({code : "1", msg: "Fetch Successful", blogs});
+    const bookmarkBlogs = blogs.filter(blog => blog !== undefined);
+    res.status(200).json({code : "1", msg: "Fetch Successful", bookmarkBlogs});
   } catch (e) {
-   
     res.status(500).json({ msg: "Internal server error" });
   }
   

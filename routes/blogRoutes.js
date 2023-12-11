@@ -14,7 +14,7 @@ router.get("/home/blogs/:id",verifyToken, getSingleBlog);
 router.get("/home/my-blogs",verifyToken, getBlogs);
 
 //POST Comment
-router.post("/home/blogs/add-comment", addComment);
+router.post("/home/blogs/add-comment",verifyToken, addComment);
 
 //POST a single blog
 router.post("/home/new-blog", verifyToken, uploadBlog);
